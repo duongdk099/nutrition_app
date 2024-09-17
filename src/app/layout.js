@@ -19,7 +19,7 @@ export default function Layout({ children }) {
                   <Link href="/recipes" className="hover:text-green-200">Recipes</Link>
                 </li>
                 <li>
-                  <Link href="/nutritional-info" className="hover:text-green-200">Nutritional Info</Link>
+                  <Link href="/food-logs" className="hover:text-green-200">Food Logs</Link>
                 </li>
                 <li>
                   <Link href="/profile" className="hover:text-green-200">Profile</Link>
