@@ -1,27 +1,103 @@
 "use client";
-import { useState } from 'react';
+import { useState } from "react";
 
 const FoodLogs = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedFood, setSelectedFood] = useState(null);
   const [quantity, setQuantity] = useState(100); // default quantity in grams
   const [mealNumber, setMealNumber] = useState(1); // default meal number
-  const [mealTime, setMealTime] = useState('08:00'); // default meal time
+  const [mealTime, setMealTime] = useState("08:00"); // default meal time
   const [foodLogs, setFoodLogs] = useState([]);
+  const [foodDatabase, setFoodDatabase] = useState([]);
+  const [loading, setLoading] = useState(false); // Loading state
 
-  // Example food data
-  const foodDatabase = [
-    { name: 'Chicken Breast', calories: 165, protein: 31, fiber: 0, carbs: 0 },
-    { name: 'Broccoli', calories: 55, protein: 3.7, fiber: 2.4, carbs: 11.2 },
-    { name: 'Apple', calories: 52, protein: 0.3, fiber: 2.4, carbs: 14 },
-  ];
+  // Nutritionix API credentials
+  const NUTRITIONIX_API_APP_ID = "8fbcf942"; // Replace with your Nutritionix App ID
+  const NUTRITIONIX_API_APP_KEY = "f4425ac4806df7300c501be9b78a3c3f"; // Replace with your Nutritionix App Key
 
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
     setSearchTerm(e.target.value);
+
+    if (e.target.value.length > 2) {
+      setLoading(true); // Start loading
+      try {
+        const res = await fetch(
+          `https://trackapi.nutritionix.com/v2/search/instant?query=${e.target.value}`,
+          {
+            headers: {
+              "x-app-id": NUTRITIONIX_API_APP_ID,
+              "x-app-key": NUTRITIONIX_API_APP_KEY,
+              "x-remote-user-id": "0",
+            },
+          }
+        );
+
+        if (!res.ok) {
+          console.error("Response status:", res.status);
+          throw new Error(`Error: ${res.status}`);
+        }
+
+        const data = await res.json();
+        console.log("Data from Nutritionix:", data);
+
+        // Display common foods for selection
+        const commonFoods = data.common.map((food) => ({
+          name: food.food_name,
+        }));
+
+        setFoodDatabase(commonFoods);
+      } catch (error) {
+        console.error("Error fetching data from Nutritionix:", error);
+      } finally {
+        setLoading(false); // End loading
+      }
+    } else {
+      setFoodDatabase([]);
+    }
   };
 
-  const handleSelectFood = (food) => {
-    setSelectedFood(food);
+  // Function to handle selecting a food from the search results and getting its nutrients
+  const handleSelectFood = async (food) => {
+    setLoading(true); // Start loading
+
+    try {
+      const res = await fetch("https://trackapi.nutritionix.com/v2/natural/nutrients", {
+        method: "POST",
+        headers: {
+          "x-app-id": NUTRITIONIX_API_APP_ID,
+          "x-app-key": NUTRITIONIX_API_APP_KEY,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query: food.name,
+        }),
+      });
+
+      if (!res.ok) {
+        console.error("Response status:", res.status);
+        throw new Error(`Error: ${res.status}`);
+      }
+
+      const data = await res.json();
+      console.log("Nutritional data from Nutritionix:", data);
+
+      if (data.foods && data.foods.length > 0) {
+        const nutrientData = data.foods[0]; // Get the first food item returned
+        const selectedNutritionalFood = {
+          name: nutrientData.food_name,
+          calories: nutrientData.nf_calories || 0,
+          protein: nutrientData.nf_protein || 0,
+          fiber: nutrientData.nf_dietary_fiber || 0,
+          carbs: nutrientData.nf_total_carbohydrate || 0,
+        };
+
+        setSelectedFood(selectedNutritionalFood);
+      }
+    } catch (error) {
+      console.error("Error fetching nutritional data from Nutritionix:", error);
+    } finally {
+      setLoading(false); // End loading
+    }
   };
 
   const handleAddFood = () => {
@@ -31,13 +107,16 @@ const FoodLogs = () => {
       setSelectedFood(null);
       setQuantity(100);
       setMealNumber(1); // reset to default
-      setMealTime('08:00'); // reset to default
+      setMealTime("08:00"); // reset to default
     }
   };
 
   const handleEditFood = (index) => {
     const updatedLogs = [...foodLogs];
-    updatedLogs[index].quantity = prompt("Enter new quantity:", updatedLogs[index].quantity);
+    updatedLogs[index].quantity = prompt(
+      "Enter new quantity:",
+      updatedLogs[index].quantity
+    );
     setFoodLogs(updatedLogs);
   };
 
@@ -61,17 +140,23 @@ const FoodLogs = () => {
             placeholder="Search for food item..."
           />
           <ul className="mt-4 space-y-2">
-            {foodDatabase
-              .filter((food) => food.name.toLowerCase().includes(searchTerm.toLowerCase()))
-              .map((food, index) => (
-                <li
-                  key={index}
-                  className="p-2 border rounded cursor-pointer hover:bg-gray-200"
-                  onClick={() => handleSelectFood(food)}
-                >
-                  {food.name}
-                </li>
-              ))}
+            {loading ? (
+              <li>Loading...</li>
+            ) : (
+              foodDatabase
+                .filter((food) =>
+                  food.name.toLowerCase().includes(searchTerm.toLowerCase())
+                )
+                .map((food, index) => (
+                  <li
+                    key={index}
+                    className="p-2 border rounded cursor-pointer hover:bg-gray-200"
+                    onClick={() => handleSelectFood(food)}
+                  >
+                    {food.name}
+                  </li>
+                ))
+            )}
           </ul>
         </div>
 

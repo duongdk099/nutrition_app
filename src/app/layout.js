@@ -9,7 +9,7 @@ export default function Layout({ children }) {
         {/* Header with Navigation */}
         <header className="bg-green-500 text-white shadow-md">
           <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div className="text-2xl font-bold">NutriLife</div>
+          <Link href="/" className="text-2xl font-bold">NutriLife</Link>
             <nav>
               <ul className="flex space-x-4">
                 <li>
