@@ -8,17 +8,19 @@ const CreateFoodItem = () => {
   const [protein, setProtein] = useState('');
   const [fat, setFat] = useState('');
   const [carbs, setCarbs] = useState('');
+  const [fiber, setFiber] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const newFoodItem = await createFoodItem(name, calories, protein, fat, carbs);
+      const newFoodItem = await createFoodItem(name, calories, protein, fat, carbs,fiber);
       console.log('Food Item created:', newFoodItem);
       setName(''); // Clear form inputs
       setCalories('');
       setProtein('');
       setFat('');
       setCarbs('');
+      setFiber('');
     } catch (error) {
       console.error('Error creating food item:', error);
     }
@@ -55,6 +57,12 @@ const CreateFoodItem = () => {
         placeholder="Carbs"
         value={carbs}
         onChange={(e) => setCarbs(e.target.value)}
+      />
+      <input
+        type="number"
+        placeholder="Fiber"
+        value={fiber}
+        onChange={(e) => setFiber(e.target.value)}
       />
       <button type="submit">Create Food Item</button>
     </form>
