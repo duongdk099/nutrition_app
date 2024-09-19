@@ -1,6 +1,6 @@
 "use server";
 import { neon } from "@neondatabase/serverless";
-
+import bcrypt from "bcryptjs";
 export async function getData() {
   const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL);
   const data = await sql`SELECT * FROM users`;
@@ -31,15 +31,31 @@ export async function createUser(username, email, password) {
     return newUser;
   }
 
-export async function login(email, password) {
-  const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL);
-  const user = await sql`
-        SELECT * FROM users
-        WHERE email = ${email}
-        AND password_hash = ${password}
+  export async function login(email, password) {
+    const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL);
+    
+    // Find the user with the given email
+    const user = await sql`
+      SELECT * FROM users WHERE email = ${email}
     `;
-  return user;
-}
+    
+    if (user.length === 0) {
+      // If no user is found, return an error or empty result
+      throw new Error("User not found.");
+    }
+    
+    const hashedPassword = user[0].password_hash;
+  
+    // Compare the plain password with the hashed password in the database
+    const isPasswordValid = await bcrypt.compare(password, hashedPassword);
+  
+    if (!isPasswordValid) {
+      throw new Error("Invalid password.");
+    }
+  
+    // If the password is valid, return the user details
+    return user[0];
+  }
 
 export async function updatePassword(userId, newPassword) {
   const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL);
