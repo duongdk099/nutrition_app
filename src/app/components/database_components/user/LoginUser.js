@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { login } from "../../../services/users"; // Import the login function from your database file
+import { login } from "../../../services/users"; // Import your login function
+import Cookies from "js-cookie"; // Import js-cookie to manage cookies
 
 const LoginUser = () => {
   const [email, setEmail] = useState("");
@@ -14,15 +15,20 @@ const LoginUser = () => {
     setSuccess("");
 
     try {
-      // Call the login function with the email and plain password (not hashed)
+      // Call the login function with the email and plain password
       const user = await login(email, password);
 
       if (!user) {
         setError("Invalid email or password.");
       } else {
-        // If login is successful
+        console.log(user);
+        
+        // If login is successful, set a cookie with user information or token
+        Cookies.set("authToken", JSON.stringify(user), { expires: 7 }); // The token is stored for 7 days
         setSuccess("Login successful!");
-        window.location.href = "/profile"; // This performs a full page reload and redirects to /profile
+        
+        // Redirect to the profile page
+        window.location.href = "/profile";
       }
 
       // Clear form inputs

@@ -1,16 +1,32 @@
-"use client";
-import { useState } from "react";
+'use client';
+import { useState, useEffect } from "react";
 import SearchFood from "../components/SearchFood";
 import FoodDetails from "../components/FoodDetails";
 import FoodLogList from "../components/FoodLogList";
 import { selectFoodItem } from "../api/nutritionixApi"; // Import the API helper
+import Cookies from 'js-cookie'; // Import js-cookie to manage cookies
 
 const FoodLogs = () => {
   const [selectedFood, setSelectedFood] = useState(null);
   const [foodLogs, setFoodLogs] = useState([]);
+  const [error, setError] = useState(null); // State to track error
+  const [loading, setLoading] = useState(true); // State for loading
 
   const NUTRITIONIX_API_APP_ID = process.env.NEXT_PUBLIC_NUTRITIONIX_API_APP_ID;
   const NUTRITIONIX_API_APP_KEY = process.env.NEXT_PUBLIC_NUTRITIONIX_API_APP_KEY;
+
+  useEffect(() => {
+    const authToken = Cookies.get('authToken'); // Check if authToken exists
+
+    if (!authToken || authToken === '') {
+      // If no auth token is found, set error and stop loading
+      setError('You are not logged in. Please log in to access this page.');
+      setLoading(false);
+    } else {
+      // User is authenticated, stop loading
+      setLoading(false);
+    }
+  }, []);
 
   const handleSelectFood = async (food) => {
     const nutritionalFood = await selectFoodItem(food.name, NUTRITIONIX_API_APP_ID, NUTRITIONIX_API_APP_KEY);
@@ -32,6 +48,9 @@ const FoodLogs = () => {
   const handleDeleteFood = (index) => {
     setFoodLogs(foodLogs.filter((_, i) => i !== index));
   };
+
+  if (loading) return <div>Loading...</div>; // Show loading while checking auth status
+  if (error) return <div>{error}</div>; // Show error if user is not authenticated
 
   return (
     <div className="container mx-auto px-4 py-12">
