@@ -6,7 +6,24 @@ const FoodDetails = ({ selectedFood, onAddFood }) => {
   const [mealTime, setMealTime] = useState("08:00"); // default meal time
 
   const handleAddFood = () => {
-    onAddFood({ ...selectedFood, quantity, mealNumber, mealTime });
+    // Ensure correct mapping of selected food details to required fields
+    const foodToAdd = {
+      food_name: selectedFood.name, 
+      nf_calories: selectedFood.calories, 
+      nf_protein: selectedFood.protein, 
+      nf_dietary_fiber: selectedFood.fiber, 
+      nf_total_carbohydrate: selectedFood.carbs, 
+      image: selectedFood.image,
+      quantity, // User-defined quantity
+      mealNumber, // User-defined meal number
+      mealTime, // User-defined meal time
+    };
+
+    console.log(foodToAdd);
+  
+    onAddFood(foodToAdd);
+  
+    // Reset the form after adding the food
     setQuantity(100);
     setMealNumber(1);
     setMealTime("08:00");
