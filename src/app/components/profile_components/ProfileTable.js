@@ -3,6 +3,14 @@ import React from 'react';
 // Helper function to safely convert values to numbers and default to 0 if invalid
 const safeNumber = (value) => Number(value) || 0;
 
+// Helper function to convert time string to a Date object for proper sorting
+const parseTime = (timeString) => {
+  const [hours, minutes] = timeString.split(':').map(Number);
+  const date = new Date();
+  date.setHours(hours, minutes, 0, 0); // Set time on current date
+  return date;
+};
+
 export default function ProfileTable({ meals }) {
   // Calculate total nutrition for the entire day
   let totalDailyCalories = 0;
@@ -10,6 +18,21 @@ export default function ProfileTable({ meals }) {
   let totalDailyCarbs = 0;
   let totalDailyFiber = 0;
   let totalDailyFat = 0;
+
+  // Sort meals by meal number first, then by meal time (from early to late)
+  const sortedMeals = meals.sort((a, b) => {
+    if (a.meal_number === b.meal_number) {
+      // If meal numbers are the same, sort by meal time
+      return parseTime(a.meal_time) - parseTime(b.meal_time);
+    }
+    return a.meal_number - b.meal_number; // Otherwise, sort by meal number
+  });
+
+  // Function to handle the "Edit" button click and navigate to the edit page
+  const handleEdit = (mealId) => {
+    // Navigate to the editMealItem page with the meal's ID
+    window.location.href = `/editMealItem/${mealId}`;
+  };
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg">
@@ -27,7 +50,7 @@ export default function ProfileTable({ meals }) {
           </tr>
         </thead>
         <tbody>
-          {meals.map((meal) => {
+          {sortedMeals.map((meal) => {
             // Calculate meal-specific nutrition
             let mealCalories = 0;
             let mealProtein = 0;
@@ -75,8 +98,12 @@ export default function ProfileTable({ meals }) {
                   Fat: {mealFat.toFixed(2)}g
                 </td>
                 <td className="px-4 py-2">
-                  <button className="bg-yellow-400 text-white px-3 py-1 rounded mr-2">Edit</button>
-                  <button className="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
+                  <button
+                    onClick={() => handleEdit(meal.meal_id)} // Navigate to the edit page
+                    className="bg-yellow-400 text-white px-3 py-1 rounded mr-2"
+                  >
+                    Edit
+                  </button>
                 </td>
               </tr>
             );
