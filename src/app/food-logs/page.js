@@ -60,8 +60,9 @@ const FoodLogs = () => {
         mealTime, // Pass meal time from FoodDetails
         image,
       } = food;
-
-      const logDate = new Date().toISOString().split('T')[0]; // Today's date for log_date
+      
+      const now = new Date();
+      const logDate = now.toISOString().slice(0, 19); // Capture full date and time
       console.log(selectedFood);
       console.log(userId, mealNumber, mealTime, logDate);
       

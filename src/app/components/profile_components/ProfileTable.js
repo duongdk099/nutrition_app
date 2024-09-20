@@ -64,15 +64,15 @@ export default function ProfileTable({ meals }) {
                 <td className="px-4 py-2">Meal {meal.meal_number}</td>
                 <td className="px-4 py-2">{meal.meal_time}</td>
                 <td className="px-4 py-2">
-                  Calories: {mealCalories} kcal
+                  Calories: {mealCalories.toFixed(2)} kcal
                   <br />
-                  Protein: {mealProtein}g
+                  Protein: {mealProtein.toFixed(2)}g
                   <br />
-                  Carbs: {mealCarbs}g
+                  Carbs: {mealCarbs.toFixed(2)}g
                   <br />
-                  Fiber: {mealFiber}g
+                  Fiber: {mealFiber.toFixed(2)}g
                   <br />
-                  Fat: {mealFat}g
+                  Fat: {mealFat.toFixed(2)}g
                 </td>
                 <td className="px-4 py-2">
                   <button className="bg-yellow-400 text-white px-3 py-1 rounded mr-2">Edit</button>
@@ -87,11 +87,11 @@ export default function ProfileTable({ meals }) {
       {/* Display total nutrition summary for the day */}
       <div className="bg-gray-50 p-4 rounded-lg mt-6">
         <h3 className="text-xl font-semibold mb-2">Total Nutrition for the Day</h3>
-        <p>Calories: {totalDailyCalories} kcal</p>
-        <p>Protein: {totalDailyProtein}g</p>
-        <p>Carbohydrates: {totalDailyCarbs}g</p>
-        <p>Fiber: {totalDailyFiber}g</p>
-        <p>Fat: {totalDailyFat}g</p>
+        <p>Calories: {totalDailyCalories.toFixed(2)} kcal</p>
+        <p>Protein: {totalDailyProtein.toFixed(2)}g</p>
+        <p>Carbohydrates: {totalDailyCarbs.toFixed(2)}g</p>
+        <p>Fiber: {totalDailyFiber.toFixed(2)}g</p>
+        <p>Fat: {totalDailyFat.toFixed(2)}g</p>
       </div>
     </div>
   );

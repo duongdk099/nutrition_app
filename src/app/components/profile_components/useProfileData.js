@@ -8,14 +8,6 @@ export function useProfileData() {
   const [error, setError] = useState(null); // Error state
   const [loading, setLoading] = useState(true); // Loading state
 
-  const formatDateLocal = (dateString) => {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
-    const day = String(date.getDate()).padStart(2, '0'); // Get the day of the month
-    return `${year}-${month}-${day}`;
-  };
-
   useEffect(() => {
     const authToken = Cookies.get('authToken'); // Get authToken from cookies
 
@@ -32,13 +24,21 @@ export function useProfileData() {
       try {
         const userMeals = await getMealsByUser(userId);
 
-        // Get today's date in YYYY-MM-DD format
+        // Get today's date in local format (YYYY-MM-DD)
         const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
 
-        // Function to format log_date to YYYY-MM-DD
-        // const formatDate = (dateString) => new Date(dateString).toISOString().split('T')[0];
+        // Function to format log_date to YYYY-MM-DD in local time
+        const formatDateLocal = (dateString) => {
+          const date = new Date(dateString);
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+          const day = String(date.getDate()).padStart(2, '0'); // Get the day of the month
+          return `${year}-${month}-${day}`;
+        };
+
         console.log('user meals data:', userMeals);
-        console.log('date from user', ((userMeals[4]).log_date));
+        console.log('date from user', formatDateLocal(userMeals[4].log_date));
+        console.log('today ', formatDateLocal(today));
         
         // Filter meals for today's date
         const todayMeals = userMeals.filter(meal => formatDateLocal(meal.log_date) === formatDateLocal(today));
