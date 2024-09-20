@@ -60,7 +60,7 @@ const FoodLogs = () => {
         mealTime, // Pass meal time from FoodDetails
         image,
       } = food;
-      
+
       const now = new Date();
       const logDate = now.toISOString().slice(0, 19); // Capture full date and time
       console.log(selectedFood);
@@ -84,6 +84,7 @@ const FoodLogs = () => {
         nf_dietary_fiber || 0 // Fiber from selected food
       );
 
+      window.location.href = "/profile";
       // Add the new meal item to the local foodLogs state
       setFoodLogs([...foodLogs, newMealItem]);
 

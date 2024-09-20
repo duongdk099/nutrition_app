@@ -3,7 +3,7 @@ import Cookies from 'js-cookie'; // Import js-cookie to manage cookies
 import { getMealsByUser } from '../../services/meals'; // Import your services for meals and meal items
 import { getMealItemsByMeal } from '../../services/meal_items';
 
-export function useProfileData() {
+export function useProfileData(selectedDate) {
   const [meals, setMeals] = useState([]); // State to store user's meals
   const [error, setError] = useState(null); // Error state
   const [loading, setLoading] = useState(true); // Loading state
@@ -24,9 +24,6 @@ export function useProfileData() {
       try {
         const userMeals = await getMealsByUser(userId);
 
-        // Get today's date in local format (YYYY-MM-DD)
-        const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
-
         // Function to format log_date to YYYY-MM-DD in local time
         const formatDateLocal = (dateString) => {
           const date = new Date(dateString);
@@ -36,21 +33,18 @@ export function useProfileData() {
           return `${year}-${month}-${day}`;
         };
 
-        console.log('user meals data:', userMeals);
-        console.log('date from user', formatDateLocal(userMeals[4].log_date));
-        console.log('today ', formatDateLocal(today));
-        
-        // Filter meals for today's date
-        const todayMeals = userMeals.filter(meal => formatDateLocal(meal.log_date) === formatDateLocal(today));
+        // Filter meals for the selected date
+        const filteredMeals = userMeals.filter(meal => formatDateLocal(meal.log_date) === formatDateLocal(selectedDate));
 
         const mealDataWithItems = await Promise.all(
-          todayMeals.map(async (meal) => {
+          filteredMeals.map(async (meal) => {
             const foodItems = await getMealItemsByMeal(meal.meal_id);
             return { ...meal, foodItems };
           })
         );
 
-        setMeals(mealDataWithItems); // Set meals with their food items for today
+        // If no meals are found, still return empty array but not null
+        setMeals(mealDataWithItems.length > 0 ? mealDataWithItems : []);
         setLoading(false);
       } catch (err) {
         setError('Failed to load meals data');
@@ -60,7 +54,7 @@ export function useProfileData() {
     };
 
     fetchMeals();
-  }, []);
+  }, [selectedDate]); // Fetch meals whenever the selected date changes
 
   return { meals, error, loading };
 }
