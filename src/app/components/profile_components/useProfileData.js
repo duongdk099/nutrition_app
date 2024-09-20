@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
-import Cookies from 'js-cookie'; // Import js-cookie to manage cookies
-import { getMealsByUser } from '../../services/meals'; // Import your services for meals and meal items
+import Cookies from 'js-cookie';
+import { getMealsByUser } from '../../services/meals';
 import { getMealItemsByMeal } from '../../services/meal_items';
 
-export function useProfileData(selectedDate) {
-  const [meals, setMeals] = useState([]); // State to store user's meals
-  const [error, setError] = useState(null); // Error state
-  const [loading, setLoading] = useState(true); // Loading state
+export function useProfileData(selectedDate, sortOption) { 
+  const [meals, setMeals] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const authToken = Cookies.get('authToken'); // Get authToken from cookies
+    const authToken = Cookies.get('authToken');
 
     if (!authToken || authToken === '') {
       setError('You are not logged in. Please log in first.');
@@ -18,22 +18,20 @@ export function useProfileData(selectedDate) {
     }
 
     const object_authToken = JSON.parse(authToken);
-    const userId = object_authToken.user_id; // Extract user_id from token
+    const userId = object_authToken.user_id;
 
     const fetchMeals = async () => {
       try {
         const userMeals = await getMealsByUser(userId);
 
-        // Function to format log_date to YYYY-MM-DD in local time
         const formatDateLocal = (dateString) => {
           const date = new Date(dateString);
           const year = date.getFullYear();
-          const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
-          const day = String(date.getDate()).padStart(2, '0'); // Get the day of the month
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, '0');
           return `${year}-${month}-${day}`;
         };
 
-        // Filter meals for the selected date
         const filteredMeals = userMeals.filter(meal => formatDateLocal(meal.log_date) === formatDateLocal(selectedDate));
 
         const mealDataWithItems = await Promise.all(
@@ -43,8 +41,19 @@ export function useProfileData(selectedDate) {
           })
         );
 
-        // If no meals are found, still return empty array but not null
-        setMeals(mealDataWithItems.length > 0 ? mealDataWithItems : []);
+        // Sort meals based on the selected sort option
+        let sortedMeals = mealDataWithItems;
+        if (sortOption === 'meal_number') {
+          sortedMeals = mealDataWithItems.sort((a, b) => a.meal_number - b.meal_number);
+        } else if (sortOption === 'meal_time') {
+          sortedMeals = mealDataWithItems.sort((a, b) => {
+            const timeA = new Date(`1970-01-01T${a.meal_time}`).getTime();
+            const timeB = new Date(`1970-01-01T${b.meal_time}`).getTime();
+            return timeA - timeB;  // Compare as timestamps
+          });
+        }
+
+        setMeals(sortedMeals.length > 0 ? sortedMeals : []);
         setLoading(false);
       } catch (err) {
         setError('Failed to load meals data');
@@ -54,7 +63,7 @@ export function useProfileData(selectedDate) {
     };
 
     fetchMeals();
-  }, [selectedDate]); // Fetch meals whenever the selected date changes
+  }, [selectedDate, sortOption]);
 
   return { meals, error, loading };
 }

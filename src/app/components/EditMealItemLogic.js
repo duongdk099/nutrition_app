@@ -73,6 +73,7 @@ export default function EditMealItemLogic({ mealItemId }) {
       }
 
       alert("Meal item and meal updated successfully");
+      window.location.href = "http://localhost:3000/profile"; // Redirect after update
     } catch (err) {
       setError("Error updating meal item or meal: " + err.message);
       console.error(err);
@@ -92,6 +93,7 @@ export default function EditMealItemLogic({ mealItemId }) {
       }
 
       alert("Meal item and meal (if no other items) deleted successfully");
+      window.location.href = "http://localhost:3000/profile"; // Redirect after update
       // Optionally, redirect or refresh the page after deletion
     } catch (err) {
       setError("Error deleting meal item: " + err.message);

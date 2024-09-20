@@ -4,11 +4,16 @@ import { useProfileData } from '../components/profile_components/useProfileData'
 import ProfileTable from '../components/profile_components/ProfileTable'; // Profile UI component
 
 export default function ProfilePage() {
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]); // Default to today's date
-  const { meals, error, loading } = useProfileData(selectedDate); // Pass the selected date to the hook
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [sortOption, setSortOption] = useState('meal_number'); // Default sorting option
+  const { meals, error, loading } = useProfileData(selectedDate, sortOption);
 
   const handleDateChange = (event) => {
-    setSelectedDate(event.target.value); // Update selected date
+    setSelectedDate(event.target.value);
+  };
+
+  const handleSortChange = (event) => {
+    setSortOption(event.target.value);
   };
 
   if (loading) return <div>Loading...</div>;
@@ -28,6 +33,15 @@ export default function ProfilePage() {
             onChange={handleDateChange}
             className="p-2 border rounded"
           />
+        </div>
+
+        {/* Dropdown to select sort option */}
+        <div className="text-center mb-8">
+          <label className="text-lg mr-2">Sort by:</label>
+          <select value={sortOption} onChange={handleSortChange} className="p-2 border rounded">
+            <option value="meal_number">Meal Number</option>
+            <option value="meal_time">Meal Time</option>
+          </select>
         </div>
 
         {/* Use ProfileTable component to display the UI */}

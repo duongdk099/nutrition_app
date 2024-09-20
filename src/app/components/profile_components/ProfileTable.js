@@ -27,6 +27,10 @@ export default function ProfileTable({ meals }) {
     });
   }
 
+  const handleEdit = (mealId) => {
+    window.location.href = `http://localhost:3000/editMealItem/${mealId}`;
+  };
+
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg">
       <h2 className="text-2xl font-semibold mb-4">Meals Summary</h2>
@@ -84,8 +88,12 @@ export default function ProfileTable({ meals }) {
                     Fat: {mealFat.toFixed(2)}g
                   </td>
                   <td className="px-4 py-2">
-                    <button className="bg-yellow-400 text-white px-3 py-1 rounded mr-2">Edit</button>
-                    <button className="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
+                    <button
+                      className="bg-yellow-400 text-white px-3 py-1 rounded"
+                      onClick={() => handleEdit(meal.meal_id)}
+                    >
+                      Edit
+                    </button>
                   </td>
                 </tr>
               );
