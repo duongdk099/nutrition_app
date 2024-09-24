@@ -18,7 +18,6 @@ export function middleware(req) {
   // Allow other routes to pass through
   return NextResponse.next();
 }
-
 export const config = {
-  matcher: ['/food-logs/:path*', '/profile/:path*'],
+  matcher: ['/food-logs/:path*', '/profile/:path*', '/admin/:path*'],
 };

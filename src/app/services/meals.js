@@ -11,6 +11,12 @@ export async function createMeal(user_id, meal_number, meal_time, log_date) {
     return newMeal;
 }
 
+// Read (Get) all meals
+export async function getMeals() {
+    const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL);
+    const meals = await sql`SELECT * FROM meals`;
+    return meals;
+}
 // Read (Get) meals by user_id
 export async function getMealsByUser(user_id) {
     const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL);

@@ -7,6 +7,11 @@ export async function getData() {
   return data;
 }
 
+export async function getUsers() {
+  const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL);
+  const users = await sql`SELECT * FROM users`;
+  return users;
+}
 export async function createUser(username, email, password) {
     const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL);
   
