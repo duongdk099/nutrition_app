@@ -38,16 +38,23 @@ export async function getMealById(meal_id) {
 }
 
 // Update a meal
-export async function updateMeal(meal_id, meal_number, meal_time, log_date) {
+// Update a meal
+export async function updateMeal(mealId, updatedData) {
     const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL);
+    const { mealNumber, mealTime, logDate } = updatedData;
+  
     const updatedMeal = await sql`
-        UPDATE meals
-        SET meal_number = ${meal_number}, meal_time = ${meal_time}, log_date = ${log_date}
-        WHERE meal_id = ${meal_id}
-        RETURNING *;
+      UPDATE meals
+      SET 
+        meal_number = ${mealNumber}, 
+        meal_time = ${mealTime}, 
+        log_date = ${logDate}
+      WHERE meal_id = ${mealId}
+      RETURNING *;
     `;
+  
     return updatedMeal;
-}
+  }
 
 // Delete a meal
 export async function deleteMeal(meal_id) {

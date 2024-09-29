@@ -34,21 +34,29 @@ export async function getMealItemById(meal_item_id) {
         SELECT * FROM meal_items
         WHERE meal_item_id = ${meal_item_id};
     `;
-    return mealItem;
+    return mealItem[0];
 }
 
 // Update a meal item (food details)
-export async function updateMealItem(meal_item_id, food_name, food_quantity, food_calories, food_protein, food_carb, food_fiber) {
+export async function updateMealItem(mealItemId, updatedData) {
     const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL);
+    const { foodName, foodQuantity, foodCalories, foodProtein, foodCarb, foodFiber } = updatedData;
+  
     const updatedMealItem = await sql`
-        UPDATE meal_items
-        SET food_name = ${food_name}, food_quantity = ${food_quantity}, food_calories = ${food_calories},
-            food_protein = ${food_protein}, food_carb = ${food_carb}, food_fiber = ${food_fiber}
-        WHERE meal_item_id = ${meal_item_id}
-        RETURNING *;
+      UPDATE meal_items
+      SET 
+        food_name = ${foodName},
+        food_quantity = ${foodQuantity},
+        food_calories = ${foodCalories},
+        food_protein = ${foodProtein},
+        food_carb = ${foodCarb},
+        food_fiber = ${foodFiber}
+      WHERE meal_item_id = ${mealItemId}
+      RETURNING *;
     `;
+  
     return updatedMealItem;
-}
+  }
 
 // Delete a meal item
 export async function deleteMealItem(meal_item_id) {

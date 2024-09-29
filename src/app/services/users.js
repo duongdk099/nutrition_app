@@ -12,55 +12,105 @@ export async function getUsers() {
   const users = await sql`SELECT * FROM users`;
   return users;
 }
+
+// Get a user by their user ID
+export async function getUserById(userId) {
+  const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL);
+
+  const user = await sql`
+    SELECT * FROM users WHERE user_id = ${userId};
+  `;
+
+  if (user.length === 0) {
+    throw new Error('User not found');
+  }
+
+  return user[0]; // Return the user object
+}
 export async function createUser(username, email, password) {
-    const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL);
-  
-    // Check if the email already exists in the database
-    const existingUser = await sql`
+  const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL);
+
+  // Check if the email already exists in the database
+  const existingUser = await sql`
       SELECT * FROM users
       WHERE email = ${email}
     `;
-  
-    if (existingUser.length > 0) {
-      // If email is found, throw an error or return a message
-      throw new Error("Email is already in use.");
-    }
-  
-    // Insert new user into the database if email is unique
-    const newUser = await sql`
+
+  if (existingUser.length > 0) {
+    // If email is found, throw an error or return a message
+    throw new Error("Email is already in use.");
+  }
+
+  // Insert new user into the database if email is unique
+  const newUser = await sql`
       INSERT INTO users (username, email, password_hash)
       VALUES (${username}, ${email}, ${password})
       RETURNING *;
     `;
-  
-    return newUser;
+
+  return newUser;
+}
+
+
+export async function updateUser(userId, updatedData) {
+  const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL);
+  const { username, email, password } = updatedData;
+
+  // Hash the password if it's provided
+  let hashedPassword = null;
+  if (password) {
+    hashedPassword = await bcrypt.hash(password, 10);
   }
 
-  export async function login(email, password) {
-    const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL);
-    
-    // Find the user with the given email
-    const user = await sql`
+  // If password is provided, update all fields including password
+  if (hashedPassword) {
+    const updatedUser = await sql`
+      UPDATE users
+      SET username = ${username}, 
+          email = ${email}, 
+          password_hash = ${hashedPassword}
+      WHERE user_id = ${userId}
+      RETURNING *;
+    `;
+    return updatedUser;
+  } else {
+    // If password is not provided, update only username and email
+    const updatedUser = await sql`
+      UPDATE users
+      SET username = ${username}, 
+          email = ${email}
+      WHERE user_id = ${userId}
+      RETURNING *;
+    `;
+    return updatedUser;
+  }
+}
+
+export async function login(email, password) {
+  const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL);
+
+  // Find the user with the given email
+  const user = await sql`
       SELECT * FROM users WHERE email = ${email}
     `;
-    
-    if (user.length === 0) {
-      // If no user is found, return an error or empty result
-      throw new Error("User not found.");
-    }
-    
-    const hashedPassword = user[0].password_hash;
-  
-    // Compare the plain password with the hashed password in the database
-    const isPasswordValid = await bcrypt.compare(password, hashedPassword);
-  
-    if (!isPasswordValid) {
-      throw new Error("Invalid password.");
-    }
-  
-    // If the password is valid, return the user details
-    return user[0];
+
+  if (user.length === 0) {
+    // If no user is found, return an error or empty result
+    throw new Error("User not found.");
   }
+
+  const hashedPassword = user[0].password_hash;
+
+  // Compare the plain password with the hashed password in the database
+  const isPasswordValid = await bcrypt.compare(password, hashedPassword);
+
+  if (!isPasswordValid) {
+    throw new Error("Invalid password.");
+  }
+
+  // If the password is valid, return the user details
+  return user[0];
+}
 
 export async function updatePassword(userId, newPassword) {
   const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL);
