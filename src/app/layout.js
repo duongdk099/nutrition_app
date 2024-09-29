@@ -39,9 +39,6 @@ export default function Layout({ children }) {
                 <li>
                   <Link href="/" className="hover:text-green-200">Home</Link>
                 </li>
-                <li>
-                  <Link href="/recipes" className="hover:text-green-200">Recipes</Link>
-                </li>
                 {isLoggedIn ? (
                   <>
                     <li>

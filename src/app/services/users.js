@@ -1,5 +1,4 @@
 "use server";
-import { neon } from "@neondatabase/serverless";
 import bcrypt from "bcryptjs";
 export async function getData() {
   const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL);
