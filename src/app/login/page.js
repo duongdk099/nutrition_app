@@ -5,7 +5,6 @@ import LoginUser from "../components/database_components/user/LoginUser"; // Adj
 const LoginPage = () => {
   return (
     <div>
-      <h1>Login</h1>
       <LoginUser />
     </div>
   );

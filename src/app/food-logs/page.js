@@ -1,9 +1,9 @@
-'use client';
+"use client";
 import { useState, useEffect } from "react";
 import SearchFood from "../components/SearchFood";
 import FoodDetails from "../components/FoodDetails";
 import { selectFoodItem } from "../api/nutritionixApi"; // Import the API helper
-import Cookies from 'js-cookie'; // Import js-cookie to manage cookies
+import Cookies from "js-cookie"; // Import js-cookie to manage cookies
 import { createMeal } from "../services/meals"; // Import meal services
 import { createMealItem } from "../services/meal_items"; // Import meal item services
 
@@ -15,15 +15,16 @@ const FoodLogs = () => {
   const [userId, setUserId] = useState(null); // Track user ID (from cookies or auth)
 
   const NUTRITIONIX_API_APP_ID = process.env.NEXT_PUBLIC_NUTRITIONIX_API_APP_ID;
-  const NUTRITIONIX_API_APP_KEY = process.env.NEXT_PUBLIC_NUTRITIONIX_API_APP_KEY;
+  const NUTRITIONIX_API_APP_KEY =
+    process.env.NEXT_PUBLIC_NUTRITIONIX_API_APP_KEY;
 
   useEffect(() => {
-    const authToken = Cookies.get('authToken'); // Check if authToken exists
+    const authToken = Cookies.get("authToken"); // Check if authToken exists
     const user = JSON.parse(authToken);
     const userId = user?.user_id;
-    if (!authToken || authToken === '') {
+    if (!authToken || authToken === "") {
       // If no auth token is found, set error and stop loading
-      setError('You are not logged in. Please log in to access this page.');
+      setError("You are not logged in. Please log in to access this page.");
       setLoading(false);
     } else {
       // Optionally, decode or fetch user details
@@ -33,28 +34,30 @@ const FoodLogs = () => {
   }, []);
 
   const handleSelectFood = async (food) => {
-    const nutritionalFood = await selectFoodItem(food.name, NUTRITIONIX_API_APP_ID, NUTRITIONIX_API_APP_KEY);
+    const nutritionalFood = await selectFoodItem(
+      food.name,
+      NUTRITIONIX_API_APP_ID,
+      NUTRITIONIX_API_APP_KEY
+    );
     if (nutritionalFood) {
       setSelectedFood(nutritionalFood);
     }
   };
 
   const handleAddFood = async (food) => {
-    console.log("Adding food:", food);
-    
     if (!food) {
-      setError('No food selected to add.');
+      setError("No food selected to add.");
       return;
     }
 
     try {
       // Extract food details from selectedFood state
       const {
-        food_name, 
-        quantity, 
-        nf_calories, 
-        nf_protein, 
-        nf_dietary_fiber, 
+        food_name,
+        quantity,
+        nf_calories,
+        nf_protein,
+        nf_dietary_fiber,
         nf_total_carbohydrate,
         mealNumber, // Pass meal number from FoodDetails
         mealTime, // Pass meal time from FoodDetails
@@ -63,40 +66,46 @@ const FoodLogs = () => {
 
       const now = new Date();
       const logDate = now.toISOString().slice(0, 19); // Capture full date and time
-      console.log(selectedFood);
-      console.log(userId, mealNumber, mealTime, logDate);
-      
-      // Create a new meal using the meals service
-      const newMeal = await createMeal(userId, mealNumber, mealTime, logDate);
 
+      const quantityMultiplier = quantity / 100;
+
+      const adjustedCalories = nf_calories * quantityMultiplier;
+      const adjustedProtein = nf_protein * quantityMultiplier;
+      const adjustedFiber = nf_dietary_fiber * quantityMultiplier;
+      const adjustedCarbs = nf_total_carbohydrate * quantityMultiplier;
+
+      const newMeal = await createMeal(userId, mealNumber, mealTime, logDate);
 
       // Assuming the response contains the new meal's ID
       const mealId = newMeal[0].meal_id;
 
       // Create a new meal item (food) for this meal
-      const newMealItem = await createMealItem(
+      const newMealItem =await createMealItem(
         mealId,
-        food_name, // Use the selected food's name
-        quantity || 1, // Default to 1 if not provided
-        nf_calories || 0, // Calories from selected food
-        nf_protein || 0, // Protein from selected food
-        nf_total_carbohydrate || 0, // Carbs from selected food
-        nf_dietary_fiber || 0 // Fiber from selected food
+        food_name,
+        quantity,
+        adjustedCalories,
+        adjustedProtein,
+        adjustedCarbs,
+        adjustedFiber
       );
+      console.log("New meal item created:", newMealItem);
 
-      window.location.href = "/profile";
+      // window.location.href = "/profile";
       // Add the new meal item to the local foodLogs state
       setFoodLogs([...foodLogs, newMealItem]);
-
     } catch (err) {
-      console.error('Error adding food to meal:', err);
-      setError('There was a problem adding the food log.');
+      console.error("Error adding food to meal:", err);
+      setError("There was a problem adding the food log.");
     }
   };
 
   const handleEditFood = async (index) => {
     const updatedLogs = [...foodLogs];
-    updatedLogs[index].quantity = prompt("Enter new quantity:", updatedLogs[index].quantity);
+    updatedLogs[index].quantity = prompt(
+      "Enter new quantity:",
+      updatedLogs[index].quantity
+    );
     setFoodLogs(updatedLogs);
 
     // Optionally, you could update the meal item details in the database
