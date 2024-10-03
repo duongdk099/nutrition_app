@@ -28,7 +28,7 @@ export default function ProfileTable({ meals }) {
   }
 
   const handleEdit = (mealId) => {
-    window.location.href = `http://localhost:3000/editMealItem/${mealId}`;
+    window.location.href = `/editMealItem/${mealId}`;
   };
 
   return (
