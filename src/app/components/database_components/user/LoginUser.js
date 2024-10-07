@@ -40,6 +40,16 @@ const LoginUser = () => {
     }
   };
 
+  // Function to redirect to register page
+  const handleRegister = () => {
+    window.location.href = "/signup";
+  };
+
+  // Function to redirect to forgot password page
+  const handleForgotPassword = () => {
+    window.location.href = "/forgot-password";
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
@@ -78,6 +88,21 @@ const LoginUser = () => {
             Login
           </button>
         </form>
+
+        <div className="flex justify-between mt-4">
+          <button
+            onClick={handleRegister}
+            className="text-blue-500 hover:text-blue-600 transition-colors"
+          >
+            Register
+          </button>
+          <button
+            onClick={handleForgotPassword}
+            className="text-blue-500 hover:text-blue-600 transition-colors"
+          >
+            Forgot Password
+          </button>
+        </div>
       </div>
     </div>
   );

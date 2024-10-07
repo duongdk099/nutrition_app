@@ -41,10 +41,11 @@ export async function createUser(username, email, password) {
     throw new Error("Email is already in use.");
   }
 
+  const hashedPassword = await bcrypt.hash(password, 10);
   // Insert new user into the database if email is unique
   const newUser = await sql`
       INSERT INTO users (username, email, password_hash)
-      VALUES (${username}, ${email}, ${password})
+      VALUES (${username}, ${email}, ${hashedPassword})
       RETURNING *;
     `;
 
