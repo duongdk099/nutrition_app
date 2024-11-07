@@ -38,7 +38,6 @@ export async function getMealById(meal_id) {
 }
 
 // Update a meal
-// Update a meal
 export async function updateMeal(mealId, updatedData) {
     const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL);
     const { mealNumber, mealTime, logDate } = updatedData;

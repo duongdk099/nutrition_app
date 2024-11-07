@@ -7,6 +7,7 @@ This is a **Next.js** and **Tailwind CSS** based project that provides a dynamic
 - [Getting Started](#getting-started)
 - [Features](#features)
 - [Project Structure](#project-structure)
+- [Database Structure](#database-structure)
 - [Environment Variables](#environment-variables)
 - [Scripts](#scripts)
 - [Dependencies](#dependencies)
@@ -67,6 +68,87 @@ nutrition-website
 ├── next.config.mjs      # Next.js configuration
 └── package.json         # Project metadata and dependencies
 ```
+
+## Database Structure
+The database consists of three primary tables:
+
+1. **👤 Users**
+2. **🍛 Meals**
+3. **🍲 Meal Items**
+
+Below, we'll describe how these tables relate to one another, with the relationships defined by the 🔑 foreign keys.
+
+### 📋 Tables Overview
+
+#### 1. **👤 Users Table**
+
+- **🔑 Primary Key**: `🆔 user_id`
+- **Attributes**: 
+  - `👤 username`: The name of the user.
+  - `📧 email`: The unique email address of the user.
+  - `🔒 password_hash`: The hashed password for the user's account.
+
+#### 2. **🍛 Meals Table**
+
+- **🔑 Primary Key**: `🆔 meal_id`
+- **🔗 Foreign Key**: `🆔 user_id` → **references** `👤 users(user_id)`
+- **Attributes**: 
+  - `🔢 meal_number`: The meal number (e.g., 1 for breakfast, 2 for lunch).
+  - `⏰ meal_time`: The time at which the meal was eaten.
+  - `📅 log_date`: The date of the meal.
+  - `🕒 createdAt`: The timestamp when the meal entry was created (automatically generated).
+
+#### 3. **🍲 Meal Items Table**
+
+- **🔑 Primary Key**: `🆔 meal_item_id`
+- **🔗 Foreign Key**: `🆔 meal_id` → **references** `🍛 meals(meal_id)`
+- **Attributes**: 
+  - `🍽️ food_name`: The name of the food item.
+  - `⚖️ food_quantity`: The quantity of the food item in grams.
+  - `🔥 food_calories`: The number of calories in the food item.
+  - `💪 food_protein`: The amount of protein in grams.
+  - `🍞 food_carb`: The amount of carbohydrates in grams.
+  - `🌾 food_fiber`: The amount of fiber in grams.
+
+### 🔗 Relationships
+
+#### 1. **👤 Users ➔ 🍛 Meals**
+
+- **1️⃣ One-to-Many**: A `👤 user` can log multiple `🍛 meals`.
+- Represented by: **`🆔 user_id`** in the `🍛 meals` table, which references the **primary key** of the `👤 users` table.
+
+#### 2. **🍛 Meals ➔ 🍲 Meal Items**
+
+- **1️⃣ One-to-Many**: A `🍛 meal` can have multiple `🍲 meal_items`.
+- Represented by: **`🆔 meal_id`** in the `🍲 meal_items` table, which references the **primary key** of the `🍛 meals` table.
+
+### 🗺️ Diagram Representation
+
+```
+ 👤 users                          🍛 meals                            🍲 meal_items
++------------------+       +--------------------+       +-------------------------+
+| 🆔 user_id (PK)   |       | 🆔 meal_id (PK)    |       | 🆔 meal_item_id (PK)    |
+| 👤 username       |<------| 🆔 user_id (FK)   |       | 🆔 meal_id (FK)         |
+| 📧 email (UNIQUE) |       | 🔢 meal_number    |<------| 🍽️ food_name            |
+| 🔒 password_hash  |       | ⏰ meal_time      |       | ⚖️ food_quantity        |
++------------------+       | 📅 log_date       |       | 🔥 food_calories        |
+                       | 🕒 createdAt       |       | 💪 food_protein          |
+                       +--------------------+       | 🍞 food_carb             |
+                                                    | 🌾 food_fiber            |
+                                                    +-------------------------+
+```
+
+- **🔑 Primary Keys** are marked as `(PK)`.
+- **🔗 Foreign Keys** are marked as `(FK)`.
+- The arrows (➔) indicate the relationships between the tables:
+  - `🆔 user_id` in `🍛 meals` is a **foreign key** pointing to `🆔 user_id` in `👤 users`.
+  - `🆔 meal_id` in `🍲 meal_items` is a **foreign key** pointing to `🆔 meal_id` in `🍛 meals`.
+
+### 📊 Summary
+
+- A **👤 user** can log multiple **🍛 meals** (e.g., 🍳 breakfast, 🥗 lunch).
+- Each **🍛 meal** can consist of multiple **🍲 meal items** (e.g., different 🍔 foods eaten during that meal).
+- The structure captures a **1️⃣ one-to-many** relationship between users and meals, and between meals and meal items.
 
 ## Environment Variables
 
