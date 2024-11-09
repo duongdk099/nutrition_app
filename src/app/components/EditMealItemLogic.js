@@ -45,17 +45,22 @@ export default function EditMealItemLogic({ mealItemId }) {
       const newQuantity = safeNumber(mealItem.food_quantity); 
       if (!newQuantity) throw new Error("Quantity cannot be 0 or empty");
 
-      const originalQuantity = safeNumber(mealItem.food_quantity);
       const scalingFactor = newQuantity / originalQuantity;
+      const updatedMealItemInfo =  {
+        foodName: mealItem.food_name,
+        foodQuantity: newQuantity,
+        foodCalories: mealItem.food_calories * scalingFactor,
+        foodProtein: mealItem.food_protein * scalingFactor,
+        foodCarb: mealItem.food_carb * scalingFactor,
+        foodFiber: mealItem.food_fiber * scalingFactor,
+      };
+
+      console.log(" Updated Meal Item Info:", updatedMealItemInfo);
+      
 
       const updatedMealItem = await updateMealItem(
         mealItem.meal_item_id,
-        mealItem.food_name,
-        newQuantity,
-        mealItem.food_calories * scalingFactor,
-        mealItem.food_protein * scalingFactor,
-        mealItem.food_carb * scalingFactor,
-        mealItem.food_fiber * scalingFactor
+        updatedMealItemInfo
       );
 
       setMealItem(updatedMealItem);
@@ -63,11 +68,14 @@ export default function EditMealItemLogic({ mealItemId }) {
       const logDate = now.toISOString().slice(0, 19);
 
       if (meal) {
+        const updateMealInfo = {
+          mealNumber: meal.meal_number,
+          mealTime: meal.meal_time,
+          logDate: logDate,
+        };
         const updatedMeal = await updateMeal(
           meal.meal_id,
-          meal.meal_number,
-          meal.meal_time,
-          logDate
+          updateMealInfo
         );
         setMeal(updatedMeal);
       }
