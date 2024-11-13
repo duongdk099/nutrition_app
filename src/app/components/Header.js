@@ -7,7 +7,6 @@ const Header = () => {
             <ul className="flex space-x-4">
               <li><a href="/">Home</a></li>
               <li><a href="/profile">Profile</a></li>
-              <li><a href="/nutritional-info">Nutritional Info</a></li>
             </ul>
           </nav>
         </div>

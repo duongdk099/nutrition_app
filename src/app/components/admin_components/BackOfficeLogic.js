@@ -78,14 +78,16 @@ export const useBackOfficeLogic = () => {
   };
 
   const handleUpdateMealItem = async (mealItemId, updatedData) => {
+    const updatedDataMealItem = {
+      food_name: updatedData.food_name,
+      food_quantity: updatedData.food_quantity,
+      food_calories: updatedData.food_calories,
+      food_protein: updatedData.food_protein,
+      food_carb: updatedData.food_carb,
+      food_fiber: updatedData.food_fiber,
+    };
     const updatedMealItem = await updateMealItem(
-      mealItemId,
-      updatedData.food_name,
-      updatedData.food_quantity,
-      updatedData.food_calories,
-      updatedData.food_protein,
-      updatedData.food_carb,
-      updatedData.food_fiber
+      mealItemId, updatedDataMealItem
     );
     setMealItems(mealItems.map((mealItem) => (mealItem.meal_item_id === mealItemId ? updatedMealItem : mealItem)));
   };
