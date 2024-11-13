@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { updateMeal, getMealById } from "@/components/meals"; // Import getMealById function
+import { updateMeal, getMealById } from "@/services/meals"; // Import getMealById function
 
 const UpdateMeal = ({ mealId }) => {
   const [mealNumber, setMealNumber] = useState("");

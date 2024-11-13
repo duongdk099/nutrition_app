@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createUser } from "@/components/users"; // Import the function from your database file
+import { createUser } from "@/services/users"; // Import the function from your database file
 import bcrypt from "bcryptjs"; // Import bcryptjs for password hashing
 
 const CreateUser = () => {

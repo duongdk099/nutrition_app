@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { deleteMeal } from "@/components/meals";
+import { deleteMeal } from "@/services/meals";
 
 const DeleteMeal = () => {
   const [mealId, setMealId] = useState("");

@@ -1,6 +1,5 @@
-// components/DeleteUser.js
 import { useState } from 'react';
-import { deleteUser } from '@/components/users'; // Import the function to delete the user
+import { deleteUser } from '@/services/users'; // Import the function to delete the user
 
 const DeleteUser = () => {
   const [userId, setUserId] = useState('');

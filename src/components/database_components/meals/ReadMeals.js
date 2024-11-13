@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getMeals } from "@/components/meals";
+import { getMeals } from "@/services/meals";
 
 const ReadMeals = () => {
   const [meals, setMeals] = useState([]);

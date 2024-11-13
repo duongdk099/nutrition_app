@@ -1,6 +1,5 @@
-// components/UpdatePassword.js
 import { useState } from 'react';
-import { updatePassword } from '@/components/users'; // Import the function to update the password
+import { updatePassword } from '@/services/users'; // Import the function to update the password
 
 const UpdatePassword = () => {
   const [userId, setUserId] = useState('');
