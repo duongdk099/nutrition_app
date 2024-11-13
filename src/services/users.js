@@ -30,27 +30,33 @@ export async function getUserById(userId) {
 export async function createUser(username, email, password) {
   const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL);
 
-  // Check if the email already exists in the database
-  const existingUser = await sql`
-      SELECT * FROM users
-      WHERE email = ${email}
-    `;
+  try {
+    // Check if the email already exists in the database
+    const existingUser = await sql`
+        SELECT * FROM users
+        WHERE email = ${email}
+      `;
 
-  if (existingUser.length > 0) {
-    // If email is found, throw an error or return a message
-    throw new Error("Email is already in use.");
+    if (existingUser.length > 0) {
+      throw new Error("Email is already in use.");
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Insert new user into the database if email is unique
+    const newUser = await sql`
+        INSERT INTO users (username, email, password_hash)
+        VALUES (${username}, ${email}, ${hashedPassword})
+        RETURNING *;
+      `;
+
+    return newUser;
+  } catch (error) {
+    console.error("Error in createUser:", error.message); // Log detailed error
+    throw error;
   }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-  // Insert new user into the database if email is unique
-  const newUser = await sql`
-      INSERT INTO users (username, email, password_hash)
-      VALUES (${username}, ${email}, ${hashedPassword})
-      RETURNING *;
-    `;
-
-  return newUser;
 }
+
 
 export async function updateUser(userId, updatedData) {
   const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL);

@@ -41,7 +41,7 @@ const CreateUser = () => {
       );
       return;
     }
-
+    
     try {
       // Hash the password before passing it to the createUser function
       const hashedPassword = await bcrypt.hash(password, 10);

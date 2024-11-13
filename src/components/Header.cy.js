@@ -1,4 +1,3 @@
-// cypress/e2e/Header.cy.js
 import React from 'react';
 import Header from './Header';
 
