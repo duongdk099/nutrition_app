@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 // Helper function to safely convert values to numbers and default to 0 if invalid
 const safeNumber = (value) => Number(value) || 0;
@@ -28,7 +28,7 @@ export default function ProfileTable({ meals }) {
   }
 
   const handleEdit = (mealId) => {
-    window.location.href = `/editMealItem/${mealId}`;
+    window.location.href = `/edit-meal/${mealId}`;
   };
 
   return (
@@ -69,7 +69,8 @@ export default function ProfileTable({ meals }) {
                     <ul>
                       {meal.foodItems.map((foodItem, foodIndex) => (
                         <li key={foodIndex}>
-                          <strong>{foodItem.food_name}</strong> - {foodItem.food_quantity}g
+                          <strong>{foodItem.food_name}</strong> -{" "}
+                          {foodItem.food_quantity}g
                         </li>
                       ))}
                     </ul>
@@ -108,7 +109,9 @@ export default function ProfileTable({ meals }) {
 
       {/* Display total nutrition summary for the day */}
       <div className="bg-gray-50 p-4 rounded-lg mt-6">
-        <h3 className="text-xl font-semibold mb-2">Total Nutrition for the Day</h3>
+        <h3 className="text-xl font-semibold mb-2">
+          Total Nutrition for the Day
+        </h3>
         <p>Calories: {totalDailyCalories.toFixed(2)} kcal</p>
         <p>Protein: {totalDailyProtein.toFixed(2)}g</p>
         <p>Carbohydrates: {totalDailyCarbs.toFixed(2)}g</p>

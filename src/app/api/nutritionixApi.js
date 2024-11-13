@@ -36,36 +36,35 @@ export const selectFoodItem = async (foodName, appId, appKey) => {
   }
 };
 
-
 // Add this to api/nutritionixApi.js
 
 export const searchFoodItems = async (searchTerm, appId, appKey) => {
-    if (searchTerm.length < 3) {
-      return []; // Return an empty array if search term is too short
-    }
-  
-    try {
-      const res = await fetch(
-        `https://trackapi.nutritionix.com/v2/search/instant?query=${searchTerm}`,
-        {
-          headers: {
-            "x-app-id": appId,
-            "x-app-key": appKey,
-            "x-remote-user-id": "0",
-          },
-        }
-      );
-  
-      const data = await res.json();
-  
-      // Map the search results to a list of food names
-      const commonFoods = data.common.map((food) => ({
-        name: food.food_name,
-      }));
-  
-      return commonFoods;
-    } catch (error) {
-      console.error("Error fetching search results from Nutritionix:", error);
-      return [];
-    }
-  };
+  if (searchTerm.length < 3) {
+    return []; // Return an empty array if search term is too short
+  }
+
+  try {
+    const res = await fetch(
+      `https://trackapi.nutritionix.com/v2/search/instant?query=${searchTerm}`,
+      {
+        headers: {
+          "x-app-id": appId,
+          "x-app-key": appKey,
+          "x-remote-user-id": "0",
+        },
+      }
+    );
+
+    const data = await res.json();
+
+    // Map the search results to a list of food names
+    const commonFoods = data.common.map((food) => ({
+      name: food.food_name,
+    }));
+
+    return commonFoods;
+  } catch (error) {
+    console.error("Error fetching search results from Nutritionix:", error);
+    return [];
+  }
+};

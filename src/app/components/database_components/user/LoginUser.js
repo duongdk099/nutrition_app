@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { login } from "../../../services/users"; // Import your login function
+import { login } from "@/components/users"; // Import your login function
 import Cookies from "js-cookie"; // Import js-cookie to manage cookies
 
 const LoginUser = () => {

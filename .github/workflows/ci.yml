@@ -1,13 +1,14 @@
-
 name: CI/CD Pipeline
 
 on:
   push:
     branches:
       - main
+      - develop
   pull_request:
     branches:
       - main
+      - develop
 
 jobs:
   build:
@@ -20,7 +21,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '20.15.1'
+          node-version: "20.15.1"
 
       - name: Cache Node.js modules
         uses: actions/cache@v2

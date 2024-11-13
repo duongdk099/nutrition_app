@@ -1,8 +1,8 @@
 // BackOfficeLogic.js
 import { useState, useEffect } from 'react';
-import { getUsers, createUser, updateUser, deleteUser } from '../../services/users';
-import { getMeals, createMeal, updateMeal, deleteMeal } from '../../services/meals';
-import { getMealItems, createMealItem, updateMealItem, deleteMealItem } from '../../services/meal_items';
+import { getUsers, createUser, updateUser, deleteUser } from '@/components/users';
+import { getMeals, createMeal, updateMeal, deleteMeal } from '@/components/meals';
+import { getMealItems, createMealItem, updateMealItem, deleteMealItem } from '@/components/meal_items';
 
 export const useBackOfficeLogic = () => {
   const [users, setUsers] = useState([]);

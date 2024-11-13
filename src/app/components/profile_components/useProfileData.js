@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
-import { getMealsByUser } from '../../services/meals';
-import { getMealItemsByMeal } from '../../services/meal_items';
+import { getMealsByUser } from '@/components/meals';
+import { getMealItemsByMeal } from '@/components/meal_items';
 
 export function useProfileData(selectedDate, sortOption) { 
   const [meals, setMeals] = useState([]);

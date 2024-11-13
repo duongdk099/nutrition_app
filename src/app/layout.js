@@ -10,7 +10,7 @@ export default function Layout({ children }) {
 
   // Check for authToken in cookies when component loads
   useEffect(() => {
-    // Log the cookies to debug
+    // Log the cookies to debug.........
 
     const authToken = document.cookie.split('; ').find(row => row.startsWith('authToken='));
     setIsLoggedIn(!!authToken); // Set login state based on the presence of authToken

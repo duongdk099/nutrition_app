@@ -1,9 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { updateMealItem, getMealItemById, deleteMealItem } from "../services/meal_items"; // Import deleteMealItem
-import { getMealById, updateMeal, deleteMeal } from "../services/meals"; // Import deleteMeal
+import { updateMealItem, getMealItemById, deleteMealItem } from "@/services/meal_items"; // Import deleteMealItem
+import { getMealById, updateMeal, deleteMeal } from "@/services/meals"; // Import deleteMeal
 import EditMealItemUI from "./EditMealItemUI"; 
-import { getMealItemsByMeal } from "../services/meal_items";
+import { getMealItemsByMeal } from "@/services/meal_items";
 
 const safeNumber = (value) => Number(value) || 0;
 
