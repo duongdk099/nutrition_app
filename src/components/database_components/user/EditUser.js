@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { updateUser, getUserById } from "@/services/users"; // Import your functions
+import { updateUser, getUserById } from "../../../services/users"; // Import your functions
 
 const EditUser = ({ userId }) => {
   const [username, setUsername] = useState("");

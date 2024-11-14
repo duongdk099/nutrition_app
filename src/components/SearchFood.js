@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { searchFoodItems } from "@/app/api/nutritionixApi"; // Import the new search API
+import { searchFoodItems } from "../app/api/nutritionixApi"; // Import the new search API
 
 const SearchFood = ({ onSelectFood, NUTRITIONIX_API_APP_ID, NUTRITIONIX_API_APP_KEY }) => {
   const [searchTerm, setSearchTerm] = useState("");

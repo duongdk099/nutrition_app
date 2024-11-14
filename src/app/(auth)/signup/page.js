@@ -1,6 +1,6 @@
 "use client";
 import { useState } from 'react';
-import { createUser } from '@/services/users';
+import { createUser } from '../../../services/users';
 
 export default function SignUp() {
   const [username, setUsername] = useState('');
