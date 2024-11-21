@@ -1,30 +1,31 @@
-# Nutrition Website
+
+# 🍽️ Nutrition Website
 
 This is a **Next.js** and **Tailwind CSS** based project that provides a dynamic nutrition information platform. The application allows users to explore nutrition data, manage user sessions, and access various features with the help of `Neon` and other APIs.
 
-## Table of Contents
+## 📋 Table of Contents
 
-- [Getting Started](#getting-started)
-- [Features](#features)
-- [Project Structure](#project-structure)
-- [Database Structure](#database-structure)
-- [Environment Variables](#environment-variables)
-- [Scripts](#scripts)
-- [Dependencies](#dependencies)
-- [Technologies Used](#technologies-used)
-- [License](#license)
-- [Acknowledgments](#acknowledgments)
+- [🚀 Getting Started](#getting-started)
+- [✨ Features](#features)
+- [📁 Project Structure](#project-structure)
+- [🗄️ Database Structure](#database-structure)
+- [🔑 Environment Variables](#environment-variables)
+- [📜 Scripts](#scripts)
+- [📦 Dependencies](#dependencies)
+- [🛠️ Technologies Used](#technologies-used)
+- [📜 License](#license)
+- [🙏 Acknowledgments](#acknowledgments)
 
-## Getting Started
+## 🚀 Getting Started
 
 To set up a local copy, follow these instructions.
 
-### Prerequisites
+### ⚙️ Prerequisites
 
 - **Node.js**: Download and install the latest LTS version from [nodejs.org](https://nodejs.org).
 - **npm or Yarn**: This project uses npm by default.
 
-### Installation
+### 📥 Installation
 
 1. **Clone the Repository**
    ```bash
@@ -46,35 +47,84 @@ To set up a local copy, follow these instructions.
    ```
    Access the app at [http://localhost:3000](http://localhost:3000).
 
-## Features
+## ✨ Features
 
-- **User Authentication**: Login and registration with secure password hashing (via `bcryptjs`) and session management.
-- **Nutrition Data Display**: Fetches and displays nutrition data using APIs and custom components.
-- **Responsive Design**: Fully responsive UI using Tailwind CSS.
-- **Cookie Management**: Utilizes `js-cookie` for handling cookies and session persistence.
-- **Date Management**: `date-fns` is used for managing and displaying dates effectively.
+- **🔐 User Authentication**: Login and registration with secure password hashing (via `bcryptjs`) and session management.
+- **📊 Nutrition Data Display**: Fetches and displays nutrition data using APIs and custom components.
+- **📱 Responsive Design**: Fully responsive UI using Tailwind CSS.
+- **🍪 Cookie Management**: Utilizes `js-cookie` for handling cookies and session persistence.
+- **🗓️ Date Management**: `date-fns` is used for managing and displaying dates effectively.
 
-## Project Structure
+## 📁 Project Structure
 
 ```plaintext
-nutrition-website
-├── .next                # Next.js build output and cache
-├── public               # Static assets and images
-├── pages                # Page components for routing
-├── components           # Reusable components (e.g., UI elements, widgets)
-├── styles               # CSS and Tailwind styles
-├── utils                # Utility functions (e.g., API calls, helpers)
-├── tailwind.config.js   # Tailwind CSS configuration
-├── next.config.mjs      # Next.js configuration
-└── package.json         # Project metadata and dependencies
+Nutrition_app/
+├── package.json
+├── package-lock.json
+├── README.md
+├── .env
+├── src/
+│   ├── app/
+│   │   ├── (admin)/
+│   │   │   ├── editMealItem/
+│   │   │   ├── editMeals/
+│   │   │   ├── editUser/
+│   │   ├── (auth)/
+│   │   │   ├── login/
+│   │   │   ├── register/
+│   │   │   └── signup/
+│   │   ├── (website)/
+│   │   │   ├── edit-meal/
+│   │   │   ├── food-logs/
+│   │   │   ├── payment/
+│   │   │   ├── payment-cancel/
+│   │   │   ├── payment-success/
+│   │   │   └── profile/
+│   │   ├── api/
+│   │       ├── nutritionixApi.js
+│   │       ├── login/
+│   │       ├── logout/
+│   │       ├── stripe/
+│   │       └── user/
+│   ├── components/
+│   │   ├── CustomizeIngredients.js
+│   │   ├── EditMealComponent.js
+│   │   ├── admin_components/
+│   │   ├── database_components/
+│   │   │   ├── mealItem/
+│   │   │   ├── meals/
+│   │   │   └── user/
+│   │   ├── profile_components/
+│   │       ├── MealLog.js
+│   ├── services/
+│       ├── auth.js
+│       ├── meals.js
+│       ├── users.js
+└── cypress/
+    ├── e2e/
+    ├── fixtures/
+    └── support/
 ```
+### 📑 Key Components
 
-## Database Structure
-The database consists of three primary tables:
+- **📝 package.json & package-lock.json**: Manage dependencies and scripts for the project.
+- **⚙️ next.config.mjs**: Next.js configuration file.
+- **📁 src/**: Contains the core application code.
+  - **📂 app/**: Different pages and routing logic.
+  - **📦 components/**: Reusable UI components.
+  - **🔧 services/**: Utility services and data fetching.
+- **🧪 cypress/**: Testing-related files including e2e and component tests.
+
+Feel free to explore each directory to gain a better understanding of the project setup.
+
+## 🗄️ Database Structure
+The database consists of four primary tables and one join table:
 
 1. **👤 Users**
 2. **🍛 Meals**
 3. **🍲 Meal Items**
+4. **🛑 Roles**
+5. **🔗 User Roles** (join table)
 
 Below, we'll describe how these tables relate to one another, with the relationships defined by the 🔑 foreign keys.
 
@@ -110,6 +160,20 @@ Below, we'll describe how these tables relate to one another, with the relations
   - `🍞 food_carb`: The amount of carbohydrates in grams.
   - `🌾 food_fiber`: The amount of fiber in grams.
 
+#### 4. **🛑 Roles Table**
+
+- **🔑 Primary Key**: `🆔 role_id`
+- **Attributes**: 
+  - `📝 role_name`: The name of the role, such as 'User', 'VIP', or 'Admin'.
+
+#### 5. **🔗 User Roles Table**
+
+- **Composite Primary Key**: (`🆔 user_id`, `🆔 role_id`)
+- **Foreign Keys**: 
+  - `🆔 user_id` → **references** `👤 users(user_id)`
+  - `🆔 role_id` → **references** `🛑 roles(role_id)`
+- **Purpose**: This table establishes a **many-to-many** relationship between users and roles. A user can have multiple roles, and a role can be assigned to multiple users.
+
 ### 🔗 Relationships
 
 #### 1. **👤 Users ➔ 🍛 Meals**
@@ -121,6 +185,11 @@ Below, we'll describe how these tables relate to one another, with the relations
 
 - **1️⃣ One-to-Many**: A `🍛 meal` can have multiple `🍲 meal_items`.
 - Represented by: **`🆔 meal_id`** in the `🍲 meal_items` table, which references the **primary key** of the `🍛 meals` table.
+
+#### 3. **👤 Users ➔ 🛑 Roles (via 🔗 User Roles Table)**
+
+- **🔄 Many-to-Many**: A `👤 user` can have multiple `🛑 roles` and each `🛑 role` can be assigned to multiple `👤 users`.
+- Represented by the `🔗 user_roles` table, which references **`🆔 user_id`** and **`🆔 role_id`** from both tables.
 
 ### 🗺️ Diagram Representation
 
@@ -136,6 +205,13 @@ Below, we'll describe how these tables relate to one another, with the relations
                        +--------------------+       | 🍞 food_carb             |
                                                     | 🌾 food_fiber            |
                                                     +-------------------------+
+
+                  🛑 roles                      🔗 user_roles
++---------------------+      +-------------------------------+
+| 🆔 role_id (PK)     |      | 🆔 user_id (FK)               |
+| 📝 role_name        |<---->| 🆔 role_id (FK)               |
++---------------------+      +-------------------------------+
+
 ```
 
 - **🔑 Primary Keys** are marked as `(PK)`.
@@ -143,14 +219,16 @@ Below, we'll describe how these tables relate to one another, with the relations
 - The arrows (➔) indicate the relationships between the tables:
   - `🆔 user_id` in `🍛 meals` is a **foreign key** pointing to `🆔 user_id` in `👤 users`.
   - `🆔 meal_id` in `🍲 meal_items` is a **foreign key** pointing to `🆔 meal_id` in `🍛 meals`.
+  - `🆔 user_id` and `🆔 role_id` in `🔗 user_roles` establish many-to-many relationships between `👤 users` and `🛑 roles`.
 
 ### 📊 Summary
 
 - A **👤 user** can log multiple **🍛 meals** (e.g., 🍳 breakfast, 🥗 lunch).
 - Each **🍛 meal** can consist of multiple **🍲 meal items** (e.g., different 🍔 foods eaten during that meal).
-- The structure captures a **1️⃣ one-to-many** relationship between users and meals, and between meals and meal items.
+- Users can also have different **🛑 roles** (e.g., 'User', 'Admin') using the `🔗 user_roles` join table.
+- The structure captures a **1️⃣ one-to-many** relationship between users and meals, a **one-to-many** relationship between meals and meal items, and a **many-to-many** relationship between users and roles.
 
-## Environment Variables
+## 🔑 Environment Variables
 
 This project requires environment variables to function. Create a `.env` file at the root of your project with the following keys:
 
@@ -161,14 +239,14 @@ This project requires environment variables to function. Create a `.env` file at
 
 Add additional environment variables as necessary based on your specific API setup.
 
-## Scripts
+## 📜 Scripts
 
 - `npm run dev`: Runs the development server on [localhost:3000](http://localhost:3000).
 - `npm run build`: Builds the project for production.
 - `npm start`: Runs the production build.
 - `npm run lint`: Lints the codebase using ESLint.
 
-## Dependencies
+## 📦 Dependencies
 
 **Core:**
 - `next`: ^14.2.11
@@ -176,7 +254,6 @@ Add additional environment variables as necessary based on your specific API set
 - `tailwindcss`: ^3.4.1 (CSS framework)
 
 **Data & APIs:**
-- `@supabase/supabase-js`: ^2.45.4 (Supabase client)
 - `@neondatabase/serverless`: ^0.9.5 (Neon Database integration)
 - `axios`: ^1.7.7 (Promise-based HTTP client)
 
@@ -186,19 +263,18 @@ Add additional environment variables as necessary based on your specific API set
 - `js-cookie`: ^3.0.5 (Client-side cookie management)
 - `date-fns`: ^4.1.0 (Date manipulation)
 
-## Technologies Used
+## 🛠️ Technologies Used
 
 - **Next.js**: A React framework for server-rendered applications.
 - **Tailwind CSS**: Utility-first CSS framework for styling.
-- **Supabase**: Open-source alternative to Firebase, used for database and authentication.
 - **Neon Database**: Serverless PostgreSQL database.
 - **ESLint**: For consistent code quality and style.
 
-## License
+## 📜 License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-## Acknowledgments
+## 🙏 Acknowledgments
 
-- Thanks to the creators of Next.js, Tailwind CSS, Supabase, and any other libraries and APIs used.
-- Special thanks to [API Provider] for the nutrition data API.
+- Thanks to the creators of Next.js, Tailwind CSS, Neon, and any other libraries and APIs used.
+- Special thanks to [Nutritionix] for the nutrition data API.
