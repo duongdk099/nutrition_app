@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie"; // Import js-cookie to manage cookies
-import BackOffice from "../../../components/admin_components/BackOffice"; 
+import BackOffice from "../../../components/admin_components/BackOffice";
 
 const AdminPage = () => {
   const [isAdmin, setIsAdmin] = useState(false); // State to determine if the user is an admin
@@ -49,7 +49,9 @@ const AdminPage = () => {
     // Show a message while waiting for the redirect
     return (
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold text-center mb-4">You can't know about this page, redirecting to the home page...</h1>
+        <h1 className="text-2xl font-bold text-center mb-4">
+          You can&apos;t know about this page, redirecting to the home page...
+        </h1>
       </div>
     );
   }
