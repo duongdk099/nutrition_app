@@ -49,9 +49,7 @@ const AdminPage = () => {
     // Show a message while waiting for the redirect
     return (
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold text-center mb-4">
-          You can't know about this page, redirecting to the home page...
-        </h1>
+        <h1 className="text-2xl font-bold text-center mb-4">You can't know about this page, redirecting to the home page...</h1>
       </div>
     );
   }
