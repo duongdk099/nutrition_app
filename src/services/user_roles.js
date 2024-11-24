@@ -35,7 +35,7 @@ export async function getRolesByUserId(userId) {
         JOIN roles r ON ur.role_id = r.role_id
         WHERE ur.user_id = ${userId};
     `;
-    return userRoles;
+    return userRoles[0].role_name;
 }
 
 // Get users assigned to a specific role

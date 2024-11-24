@@ -1,6 +1,7 @@
 "use server";
 import bcrypt from "bcryptjs";
 import { neon } from "@neondatabase/serverless";
+import { createUserRole } from "./user_roles";
 export async function getData() {
   const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL);
   const data = await sql`SELECT * FROM users`;
@@ -27,10 +28,15 @@ export async function getUserById(userId) {
 
   return user[0]; // Return the user object
 }
-export async function createUser(username, email, password) {
+export async function createUser({username, email, password}) {
   const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL);
 
   try {
+    // Check if any input is undefined
+    if (!username || !email || !password) {
+      throw new Error("All fields (username, email, password) are required.");
+    }
+
     // Check if the email already exists in the database
     const existingUser = await sql`
         SELECT * FROM users
@@ -41,6 +47,7 @@ export async function createUser(username, email, password) {
       throw new Error("Email is already in use.");
     }
 
+    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Insert new user into the database if email is unique
@@ -49,6 +56,12 @@ export async function createUser(username, email, password) {
         VALUES (${username}, ${email}, ${hashedPassword})
         RETURNING *;
       `;
+
+    // Get the newly created user ID
+    const userId = newUser[0].user_id;
+
+    // Assign default role (role_id = 1) to the new user
+    await createUserRole(userId, 1);
 
     return newUser;
   } catch (error) {

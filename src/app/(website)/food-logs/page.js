@@ -10,7 +10,6 @@ import { createMealItem } from "@/services/meal_items"; // Import meal item serv
 const FoodLogs = () => {
   const [selectedFood, setSelectedFood] = useState(null);
   const [foodLogs, setFoodLogs] = useState([]);
-  const [error, setError] = useState(null); // State to track error
   const [loading, setLoading] = useState(true); // State for loading
   const [userId, setUserId] = useState(null); // Track user ID (from cookies or auth)
 
@@ -20,16 +19,21 @@ const FoodLogs = () => {
 
   useEffect(() => {
     const authToken = Cookies.get("authToken"); // Check if authToken exists
-    const user = JSON.parse(authToken);
-    const userId = user?.user_id;
     if (!authToken || authToken === "") {
-      // If no auth token is found, set error and stop loading
-      setError("You are not logged in. Please log in to access this page.");
-      setLoading(false);
+      // If no auth token is found, redirect to login page
+      window.location.href = "/login";
     } else {
-      // Optionally, decode or fetch user details
-      setUserId(userId); // Assume userId is stored in cookies
-      setLoading(false);
+      try {
+        const user = JSON.parse(authToken);
+        const userId = user?.user_id;
+        setUserId(userId); // Assume userId is stored in cookies
+      } catch (e) {
+        // If parsing fails, redirect to login
+        console.error("Invalid auth token, redirecting to login...");
+        window.location.href = "/login";
+      } finally {
+        setLoading(false); // Stop loading once auth process is completed
+      }
     }
   }, []);
 
@@ -91,7 +95,7 @@ const FoodLogs = () => {
       );
       console.log("New meal item created:", newMealItem);
 
-      // window.location.href = "/profile";
+      window.location.href = "/profile";
       // Add the new meal item to the local foodLogs state
       setFoodLogs([...foodLogs, newMealItem]);
     } catch (err) {
@@ -120,7 +124,6 @@ const FoodLogs = () => {
   };
 
   if (loading) return <div>Loading...</div>; // Show loading while checking auth status
-  if (error) return <div>{error}</div>; // Show error if user is not authenticated
 
   return (
     <div className="container mx-auto px-4 py-12">

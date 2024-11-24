@@ -1,12 +1,45 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useProfileData } from '@/components/profile_components/useProfileData'; // Custom hook for fetching data
 import ProfileTable from '@/components/profile_components/ProfileTable'; // Profile UI component
+import Cookies from 'js-cookie'; // Import js-cookie to manage cookies
 
 export default function ProfilePage() {
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [sortOption, setSortOption] = useState('meal_number'); // Default sorting option
-  const { meals, error, loading } = useProfileData(selectedDate, sortOption);
+  const [loading, setLoading] = useState(true); // State to track loading status
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Track if user is authenticated
+
+  // useEffect to check authentication
+  useEffect(() => {
+    const authToken = Cookies.get('authToken'); // Check if authToken exists
+    if (!authToken || authToken === '') {
+      // If no auth token is found, redirect to login page
+      window.location.href = '/login';
+    } else {
+      try {
+        const user = JSON.parse(authToken);
+
+        console.log(user);
+        
+        if (user?.user_id) {
+          setIsAuthenticated(true); // User is authenticated
+        } else {
+          // Invalid token format, redirect to login
+          window.location.href = '/login';
+        }
+      } catch (e) {
+        // If parsing fails, redirect to login
+        console.error('Invalid auth token, redirecting to login...');
+        window.location.href = '/login';
+      } finally {
+        setLoading(false); // Stop loading once auth process is completed
+      }
+    }
+  }, []);
+
+  // Use custom hook to fetch profile data if user is authenticated
+  const { meals, error } = useProfileData(selectedDate, sortOption);
 
   const handleDateChange = (event) => {
     setSelectedDate(event.target.value);
@@ -16,7 +49,12 @@ export default function ProfilePage() {
     setSortOption(event.target.value);
   };
 
+  // If the page is still checking for auth, show loading
   if (loading) return <div>Loading...</div>;
+
+  // Render only if user is authenticated
+  if (!isAuthenticated) return null;
+
   if (error) return <div>{error}</div>;
 
   return (

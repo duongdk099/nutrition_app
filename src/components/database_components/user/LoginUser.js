@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { login } from "../../../services/users"; // Import your login function
 import Cookies from "js-cookie"; // Import js-cookie to manage cookies
+import { getRolesByUserId } from "@/services/user_roles";
 
 const LoginUser = () => {
   const [email, setEmail] = useState("");
@@ -21,10 +22,15 @@ const LoginUser = () => {
       if (!user) {
         setError("Invalid email or password.");
       } else {
-        console.log(user);
+        const user_id = user.user_id;
+        const role = await getRolesByUserId(user_id);
 
+        const { password_hash, ...rest } = user; // Use destructuring to omit password_hash
+        const userWithRole = { ...rest, role }; // Create new object with remaining properties and add role
+
+        console.log(userWithRole);
         // If login is successful, set a cookie with user information or token
-        Cookies.set("authToken", JSON.stringify(user), { expires: 7 }); // The token is stored for 7 days
+        Cookies.set("authToken", JSON.stringify(userWithRole), { expires: 7 }); // The token is stored for 7 days
         setSuccess("Login successful!");
 
         // Redirect to the profile page
