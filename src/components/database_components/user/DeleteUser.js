@@ -8,7 +8,6 @@ const DeleteUser = () => {
     e.preventDefault();
     try {
       const deletedUser = await deleteUser(userId);
-      console.log(`User ${userId} deleted`, deletedUser);
       setUserId(''); // Clear form input
     } catch (error) {
       console.error('Error deleting user:', error);

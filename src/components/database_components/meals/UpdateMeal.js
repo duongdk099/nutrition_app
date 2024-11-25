@@ -22,7 +22,6 @@ const UpdateMeal = ({ mealId }) => {
           setMealNumber(meal[0].meal_number);
           setMealTime(meal[0].meal_time);
           setLogDate(meal.log_date || logDate); // Use fetched logDate or default to current day
-          console.log("Meal:", meal[0]);
           
         } else {
           setError("Meal not found");

@@ -20,8 +20,6 @@ export default function ProfilePage() {
       try {
         const user = JSON.parse(authToken);
 
-        console.log(user);
-        
         if (user?.user_id) {
           setIsAuthenticated(true); // User is authenticated
         } else {

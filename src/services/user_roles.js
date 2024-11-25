@@ -13,7 +13,6 @@ export async function createUserRole(userId, roleId) {
     `;
 
     if (existingRoles.length > 0) {
-        console.log('User already has this role.');
         return { message: 'User already has this role' };
     }
 

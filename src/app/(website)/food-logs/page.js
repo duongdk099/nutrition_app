@@ -93,7 +93,6 @@ const FoodLogs = () => {
         adjustedCarbs,
         adjustedFiber
       );
-      console.log("New meal item created:", newMealItem);
 
       window.location.href = "/profile";
       // Add the new meal item to the local foodLogs state

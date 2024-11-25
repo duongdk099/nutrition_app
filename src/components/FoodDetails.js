@@ -19,8 +19,6 @@ const FoodDetails = ({ selectedFood, onAddFood }) => {
       mealTime, // User-defined meal time
     };
 
-    console.log(foodToAdd);
-  
     onAddFood(foodToAdd);
   
     // Reset the form after adding the food

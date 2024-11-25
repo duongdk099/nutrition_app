@@ -19,7 +19,6 @@ const CreateMealItem = () => {
 
     try {
       const newMealItem = await createMealItem(mealId, foodName, foodQuantity, foodCalories, foodProtein, foodCarb, foodFiber);
-      console.log("Meal item created:", newMealItem);
       setSuccess("Meal item created successfully!");
       setMealId("");
       setFoodName("");

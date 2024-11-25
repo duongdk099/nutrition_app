@@ -8,7 +8,6 @@ const VIP_ROLE_ID = 2; // Replace with your actual VIP role ID
 async function assignVIPRole(userId) {
     try {
         await createUserRole(userId, VIP_ROLE_ID);
-        console.log('VIP role assigned successfully');
     } catch (error) {
         console.error('Failed to assign VIP role:', error);
     }
@@ -30,16 +29,16 @@ export default function PaymentSuccessPage() {
         setUserName(username);
 
         // Fetch or assign the VIP role
-        getRolesByUserId(userId).then((roles) => {
-            const hasVIPRole = roles.some(role => role.id === VIP_ROLE_ID);
-            if (hasVIPRole) {
+        getRolesByUserId(userId).then((role) => {
+            if (role?.id === VIP_ROLE_ID) {
                 setUserRole("VIP");
             } else {
                 assignVIPRole(userId).then(() => setUserRole("VIP"));
             }
         }).catch((error) => {
-            console.error("Failed to fetch user roles:", error);
+            console.error("Failed to fetch user role:", error);
             setUserRole("Unknown Role");
+
         });
     }, []);
 

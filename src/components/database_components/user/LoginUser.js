@@ -28,7 +28,6 @@ const LoginUser = () => {
         const { password_hash, ...rest } = user; // Use destructuring to omit password_hash
         const userWithRole = { ...rest, role }; // Create new object with remaining properties and add role
 
-        console.log(userWithRole);
         // If login is successful, set a cookie with user information or token
         Cookies.set("authToken", JSON.stringify(userWithRole), { expires: 7 }); // The token is stored for 7 days
         setSuccess("Login successful!");

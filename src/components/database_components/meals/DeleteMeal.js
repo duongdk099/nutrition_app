@@ -13,7 +13,6 @@ const DeleteMeal = () => {
 
     try {
       const deletedMeal = await deleteMeal(mealId);
-      console.log("Meal deleted:", deletedMeal);
       setSuccess("Meal deleted successfully!");
       setMealId("");
     } catch (error) {

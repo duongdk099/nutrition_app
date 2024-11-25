@@ -48,7 +48,6 @@ const CreateUser = () => {
 
       // Pass the hashed password instead of the plain text password
       const newUser = await createUser(username, email, hashedPassword);
-      console.log("User created:", newUser);
 
       // Display success message
       setSuccess("User created successfully!");

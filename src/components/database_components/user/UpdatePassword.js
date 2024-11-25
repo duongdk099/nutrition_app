@@ -9,7 +9,6 @@ const UpdatePassword = () => {
     e.preventDefault();
     try {
       const updatedUser = await updatePassword(userId, newPassword);
-      console.log('Password updated:', updatedUser);
       setUserId(''); // Clear form inputs
       setNewPassword('');
     } catch (error) {

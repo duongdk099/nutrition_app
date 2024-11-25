@@ -26,7 +26,6 @@ export default function EditMealItemLogic({ mealItemId }) {
           const mealItemData = Array.isArray(fetchedMealItem)
             ? fetchedMealItem[0]
             : fetchedMealItem;
-          console.log("Meal Item Data:", mealItemData);
           setMealItem(mealItemData);
 
           setOriginalQuantity(safeNumber(mealItemData.food_quantity));
@@ -36,7 +35,6 @@ export default function EditMealItemLogic({ mealItemId }) {
             const mealData = Array.isArray(fetchedMeal)
               ? fetchedMeal[0]
               : fetchedMeal;
-            console.log("Meal Data:", mealData);
             setMeal(mealData);
           }
         } catch (err) {
@@ -63,8 +61,6 @@ export default function EditMealItemLogic({ mealItemId }) {
         foodCarb: mealItem.food_carb * scalingFactor,
         foodFiber: mealItem.food_fiber * scalingFactor,
       };
-
-      console.log(" Updated Meal Item Info:", updatedMealItemInfo);
 
       const updatedMealItem = await updateMealItem(
         mealItem.meal_item_id,

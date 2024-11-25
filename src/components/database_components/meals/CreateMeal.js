@@ -16,7 +16,6 @@ const CreateMeal = () => {
 
     try {
       const newMeal = await createMeal(userId, mealNumber, mealTime, logDate);
-      console.log("Meal created:", newMeal);
       setSuccess("Meal created successfully!");
       setUserId("");
       setMealNumber("");
